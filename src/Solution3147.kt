@@ -1,31 +1,21 @@
 class Solution3147 {
     fun maximumEnergy(energy: IntArray, k: Int): Int {
+        if (energy.isEmpty()) return 0
         val n = energy.size
         val ret = IntArray(k)
 
-        var pos = 0
-        while(true) {
-            if(pos >= n) {
-                break
-            }
-            for(j in 0..<k) {
-                if(pos + j >= n) {
-                    break
-                }
-                var lastRound = pos+k+j >= n
-                if(!lastRound && ret[j] + energy[pos+j] < 0) {
+        for (pos in 0 until n step k) {
+            for (j in 0 until k) {
+                if (pos + j >= n) break
+                
+                if (pos + k + j < n && ret[j] + energy[pos + j] < 0) {
                     ret[j] = 0
                 } else {
-                    ret[j] = ret[j] + energy[pos+j]
+                    ret[j] += energy[pos + j]
                 }
             }
-            pos += k
         }
 
-        var max = Int.MIN_VALUE
-        for(j in 0..<k) {
-            max = Math.max(max, ret[j])
-        }
-        return max
+        return ret.maxOrNull() ?: Int.MIN_VALUE
     }
 }
